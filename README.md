@@ -189,7 +189,7 @@ CRL Chain Verification
 <br><img width="637" height="87" alt="image" src="https://github.com/user-attachments/assets/793e8326-be2a-43af-aa1e-d75d29a9a84c" />
 <br>Revocation/OCSP OCSP Stapling: NOT SUPPORTED 
 <br><img width="611" height="39" alt="image" src="https://github.com/user-attachments/assets/99be1370-d617-4a8b-bb34-1c226aafd0c1" />
-<br><img width="1379" height="898" alt="image" src="https://github.com/user-attachments/assets/0acd73f3-1b33-4673-9126-1e179469a247" />
+<br><img width="600" height="898" alt="image" src="https://github.com/user-attachments/assets/0acd73f3-1b33-4673-9126-1e179469a247" />
 
 ** CRL Revocation Verification of a Certificate Chain**
 <br><img width="510" height="240" alt="image" src="https://github.com/user-attachments/assets/bfe8fb38-187d-4e49-a82b-414dc35ca81a" />
@@ -200,9 +200,93 @@ CRL Chain Verification
 
 
 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/CertificateAnalysis_Writeup_protected.pdf)**  
-> 🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso)
+<br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso)
+
 ---
 
+### 04 · SIEM & Endpoint Detection — Wazuh Home Lab
+**Tools:** VirtualBox · SSH · systemctl · wget · dpkg · nmap
+<br>Architecture: Wazuh OVA server (19X.XXX.XX.XXX) + Kali Linux agent ($HOSTNAME) — VirtualBox host-only network
+<br>From SCI Basic Hardening Module, I created a single-agent SIEM home lab deploying Wazuh as an open-source SIEM/XDR/EDR platform.
+Covers the full deployment lifecycle — server setup, service recovery, agent enrollment, and live monitoring across 5 security domains mapped to class topics.
+- ✅ Wazuh OVA deployed on VirtualBox — server + Kali Linux agent on host-only network
+- ✅ Service recovery — diagnosed wazuh-manager startup timeout (Java indexer RAM contention)
+- ✅ Kali Linux enrolled as monitored endpoint — active within 30 seconds of agent start
+- ✅ CIS Benchmark automated assessment — 190 controls · 45% score · cross-mapped to ISO 27001 · NIST · PCI-DSS
+- ✅ FIM alert triggered — /etc/test-confidential.txt creation detected · 7,958 files monitored
+- ✅ 258 events captured — PAM sessions · sudo to ROOT · host-based anomaly detection
+- ✅ MITRE ATT&CK correlation — Rule 5402 (T1548 Privilege Escalation) · Rule 5501/5502 (T1078 Valid Accounts)
+
+**Some Commands Used**
+```bash
+Phase 1 Server Deployment & Verification
+# Confirm Wazuh OVA received correct IPs after VirtualBox import
+# ip a
+# eth0: 19X.1XX.XX.XXX (host-only — lab network)
+# eth1: 10.X.X.XX (NAT — internet access)
+# Access dashboard
+# https://19X.XXX.XX.XXX → admin / admin
+Phase 2 Service Recovery (Startup Timeout Fix)
+# SSH into Wazuh server
+#ssh wazuh-user@19X.XXX.XX.XXX
+# Fix — start manager manually after indexer fully initialises
+#sudo systemctl start wazuh-manager
+#sudo systemctl restart wazuh-dashboard
+# Verify all three services running
+# sudo systemctl status wazuh-manager wazuh-indexer wazuh-dashboard
+Phase 3 Kali Agent Enrollment
+# Downloaded and installed Wazuh agent with pre-configured environment variables
+# Enabled and started agent
+# sudo systemctl daemon-reload
+# sudo systemctl enable wazuh-agent        # starts automatically on boot
+# sudo systemctl start wazuh-agent
+Phase 4 File Integrity Monitoring (FIM)
+# Created a test file in monitored /etc/ directory — simulates sensitive data
+# Wrote content using echo  | $WORD $LOCATION
+# Restarted agent to force immediate FIM scan (default runs on schedule)
+#sudo systemctl restart wazuh-agent
+# Verified in dashboard: Threat Hunting → search "test-confidential"
+# Rule fired: "File added to the system"
+Phase 5 Threat Detection (Recon Simulation)
+nmap -sS 12X.X.X.XX                       # triggers T1046 Network Service Discovery alert
+# View in dashboard: Threat Hunting → filter by MITRE T1046
+# Check what Wazuh sees from Kali's normal operation
+# Rule 5402 = sudo to ROOT (T1548 Privilege Escalation)
+# Rule 5501/5502 = PAM login sessions (T1078 Valid Accounts)
+```
+
+
+**Lab Results**
+<br><img width="600" height="1079" alt="image" src="https://github.com/user-attachments/assets/16f57394-d948-4238-a943-e2dc45c2bbfb" />
+<br><img width="1692" height="931" alt="image" src="https://github.com/user-attachments/assets/f5790914-01a2-4025-bf23-4d27f3f69c24" />
+<br><img width="1705" height="911" alt="image" src="https://github.com/user-attachments/assets/f2c7e972-5ec0-4811-9790-9ae6960fa1e0" />
+| Metric | Result |
+|---|---|
+| Total events captured | 258 |
+| CIS Benchmark score | 45% (83/190 controls passed) |
+| Files monitored (FIM) | 7,958 |
+| High CVEs identified | 1 |
+| MITRE ATT&CK techniques tagged | T1046 · T1548 · T1078 · T1074 |
+
+**Key Findings**
+- Service dependency management — wazuh-indexer RAM contention caused manager startup timeout on every boot. Fix: manual start sequence or ExecStartPre=/bin/sleep 30 in systemd unit. Same class of problem that causes production SIEM outages.
+- 45% CIS score is the baseline — expected for a default Kali installation (pentesting distro, not hardened workstation). Each of 99 failing controls has a specific remediation command cross-mapped to ISO 27001, NIST SP 800-53, and PCI-DSS simultaneously.
+- Kali's own tools look suspicious — running standard Kali tools while the agent was active triggered Defense Evasion (4 alerts), Privilege Escalation (4 alerts), and Initial Access (2 alerts). This is exactly how enterprise SOCs detect red team activity.
+
+**Next Steps (Planned)**
+
+| Session | Exercise | Goal |
+|---|---|---|
+| A | `nmap -sS 127.0.0.1` → capture T1046 in Threat Hunting | Recon detection validation |
+| B | Hydra brute-force against Wazuh SSH → Rule 5712 spike | Brute force pattern recognition |
+| C | Deploy Windows 10 VM agent → compare CIS score vs Kali 45% | Multi-platform SIEM |
+| D | Apply CIS remediation → verify score improvement | Full hardening loop |
+
+📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/CertificateAnalysis_Writeup_protected.pdf)**  
+<br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso)
+
+
+---
 
 ## 🧰 Tools Used
 
