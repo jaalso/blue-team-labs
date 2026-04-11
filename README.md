@@ -142,6 +142,34 @@ Target: Authorised .r.vuln.land lab targets · local certificate chain files
 - ✅ Intermediate CA REVOKED — invalidates every certificate it ever signed
 - ✅ Manual CRL revocation chain verified: Root CA → Intermediate CA → End Entity
 
+**Commands**
+```bash
+Port Discovery And Certificate Mapping
+# nmap -p 0-65535 -T4 $HOST
+# Extract TLS certificates from all open ports
+# nmap --script ssl-cert -p 4443,8080,8081,9990,21021,30443 -Pn $HOST
+Deep TLS Analysis
+# Deep TLS analysis — cipher suites, trust stores, OCSP
+sslyze $HOST:443
+# Port scan with SSL certificate extraction + service version
+# nmap -sV -p 443,8443,8080,8888,9443 --script ssl-cert $HOST
+CSV Certificate Audit
+# Parse CSV for readability
+# csvlook -d ';' $CERTIFICATEREPORTNAME.csv
+# Single command — catches three critical failure categories
+# csvlook -d ';' $CERTIFICATEREPORTNAME.csv | grep -iE "revoked|sha1|1024"
+CRL Chain Verification
+# Find CRL distribution point URLs
+# openssl x509 -in $CERTIFICATE_CA.pem -text -noout | grep -A 3 "CRL Distribution"
+# openssl x509 -in $CERTIFICATE.pem -text -noout | grep -A 3 "CRL Distribution"
+# Verify end entity certificate (full chain)
+# openssl verify -crl_check_all -CAfile $CERTIFICATE_CA.pem \
+#                -untrusted $CERTIFICATE_CA.pem \
+#                -CRLfile $CERTIFICATE_CA.crl.pem \
+#                -CRLfile issuing_ca.crl.pem $CERTIFICATE.pem
+```
+
+
 **Discover All Open Ports - Identify Ports with TLS Certificates**
 <br><img width="620" height="164" alt="image" src="https://github.com/user-attachments/assets/2a20f310-fda4-49ae-9936-46b899150dc1" />
 <br><img width="549" height="50" alt="image" src="https://github.com/user-attachments/assets/7a897ca7-4848-405f-8c8e-eaa46591882b" />
