@@ -12,7 +12,7 @@ No unauthorised systems were accessed. All work complies with Swiss law and ethi
 | 02 | Home Network Security Audit | netdiscover · nmap · Hydra · curl | ✅ Complete |
 | 03 | Web Application Security — Certificate Analysis | nmap NSE · sslyze · openssl · telnet | ✅ Complete |
 | 04 | SIEM & Endpoint Detection (Wazuh) | Wazuh v4.14.3 · OpenSearch (internal) · systemctl · SSH | ✅ Complete |
-| 05 | Email Security Gateway | SPF · DKIM · DMARC · Proxmox | 🔜 Coming soon |
+| 05 | Email Security Gateway — Proxmox Mail Gateway | Docker · Postfix · PMG · swaks · Thunderbird | 🔧 In Progress |
 
 ---
 
