@@ -3,7 +3,7 @@
 
 ---
 
-## 📁 Labs
+## 📁labs
 
 ### 01 · Network Traffic Forensics — Phishing Attack Investigation
 **Tools:** Wireshark · TShark · VirusTotal · HTTP Object Export  
