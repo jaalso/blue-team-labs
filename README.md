@@ -16,7 +16,7 @@ No unauthorised systems were accessed. All work complies with Swiss law and ethi
 
 ---
 
-###  Network Traffic Forensics - Phishing Attack Investigation
+### 01 · Network Traffic Forensics - Phishing Attack Investigation
 Scenario: SCI Network Analysis Module -> Corporate phishing incident customer PII exfiltrated to external server
 Investigated a real-world-style incident starting from a known outcome ("customer data on Pastebin")
 and traced it backwards through a PCAP file to identify the initial intrusion vector, compromised users,
@@ -76,7 +76,7 @@ CVEs:
 
 ---
 
-### 03 · Home Network Security Audit
+### 02 · Home Network Security Audit
 Performed a full recon-to-findings audit on a real home network using the same methodology used in
 professional penetration tests — ARP sweep, service enumeration, credential testing, and manual verification.
 - **Tools:** netdiscover · nmap · Hydra · curl
