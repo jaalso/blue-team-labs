@@ -11,7 +11,7 @@ No unauthorised systems were accessed. All work complies with Swiss law and ethi
 | 01 | Network Traffic Forensics — Phishing Attack Investigation | Wireshark · TShark · VirusTotal | ✅ Complete |
 | 02 | Home Network Security Audit | netdiscover · nmap · Hydra · curl | ✅ Complete |
 | 03 | Web Application Security — Certificate Analysis | nmap NSE · sslyze · openssl · telnet | ✅ Complete |
-| 04 | SIEM & Endpoint Detection (Wazuh) | Wazuh · Elastic Stack · Sysmon | 🔜 Coming soon |
+| 04 | SIEM & Endpoint Detection (Wazuh) | Wazuh v4.14.3 · OpenSearch (internal) · systemctl · SSH | ✅ Complete |
 | 05 | Email Security Gateway | SPF · DKIM · DMARC · Proxmox | 🔜 Coming soon |
 
 ---
@@ -197,10 +197,8 @@ CRL Chain Verification
 <br><img width="603" height="157" alt="image" src="https://github.com/user-attachments/assets/22047420-c621-4bab-8de2-eea34e97a41f" />
 <br><img width="518" height="91" alt="image" src="https://github.com/user-attachments/assets/700297b2-06cd-447d-bc8a-6ff36c92e067" />
 
-
-
-📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/CertificateAnalysis_Writeup_protected.pdf)**  
-<br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso)
+> 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/CertificateAnalysis_Writeup_protected.pdf)**
+<br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso) to request access
 
 ---
 
@@ -295,7 +293,8 @@ Phase 5 Threat Detection (Recon Simulation)
 | Certificate Analysis | nmap NSE · sslyze · sslscan · openssl · telnet · csvlook |
 | Network Scanning | nmap · netdiscover · curl · Hydra |
 | Email Forensics | emlAnalyzer · CyberChef · MXToolbox |
-| SIEM & Monitoring | Wazuh · Elastic Stack · Sysmon |
+| SIEM & Monitoring | Wazuh v4.14.3 · OpenSearch (internal) |
+| Deployment | wget · dpkg · systemctl · SSH |
 | Platform | Kali Linux · VirtualBox · .r.vuln.land (authorised) |
 
 ---
