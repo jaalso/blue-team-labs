@@ -1,12 +1,23 @@
 🛡️blue-team-labs
 > Defensive security lab write-ups 
-
+All labs conducted in authorised environments — Swiss Cyber Institute lab targets, own infrastructure, and training platforms.
+No unauthorised systems were accessed. All work complies with Swiss law and ethical hacking standards.
 ---
+
+## 📁 Labs
+
+| # | Lab | Tools | Status |
+|---|---|---|---|
+| 01 | Network Traffic Forensics — Phishing Attack Investigation | Wireshark · TShark · VirusTotal | ✅ Complete |
+| 02 | Home Network Security Audit | netdiscover · nmap · Hydra · curl | ✅ Complete |
+| 03 | Web Application Security — Certificate Analysis | nmap NSE · sslyze · openssl · telnet | ✅ Complete |
+| 04 | SIEM & Endpoint Detection (Wazuh) | Wazuh · Elastic Stack · Sysmon | 🔜 Coming soon |
+| 05 | Email Security Gateway | SPF · DKIM · DMARC · Proxmox | 🔜 Coming soon |
 
 ## 📁labs
 
 ###  Network Traffic Forensics - Phishing Attack Investigation
-Scenario: SCI Network Analysis Module -> Corporate phishing incident — customer PII exfiltrated to external server
+Scenario: SCI Network Analysis Module -> Corporate phishing incident customer PII exfiltrated to external server
 Investigated a real-world-style incident starting from a known outcome ("customer data on Pastebin")
 and traced it backwards through a PCAP file to identify the initial intrusion vector, compromised users,
 malware delivery chain, and data exfiltration method.
@@ -19,12 +30,62 @@ malware delivery chain, and data exfiltration method.
 - ✅ 5-phase attack timeline reconstructed · 20-hour dwell time identified
 - ✅ Zero Pastebin results = finding (exfiltration via direct HTTP upload, not Pastebin)
 
+**Wireshark filters and chosen options**
+```bash
+# Phase 1 — Initial Triage
+# Protocol hierarchy — bird's-eye view of traffic
+# Wireshark: Statistics → Protocol Hierarchy
+# Network participants — find all IPs
+# Wireshark: Statistics → Conversations → IPv4 tab
+# Filter out TCP noise to see UDP/other protocols
+#! top
+#Phase 2 — SMTP Analysis (Phishing Email)
+# Filter for SMTP traffic
+#smtp
+# Follow TCP stream to read full email exchange
+# Right-click any SMTP packet → Follow → TCP Stream
+# Filter for victim + attacker traffic
+#ip.addr == 173.255.XXX.XX || ip.addr == 10.10X.XXX.XX
+#Phase 3 — HTTP Analysis (Malware Delivery)
+# Find who clicked the phishing link
+#http
+# Filter traffic to malware delivery server
+#ip.addr == 14.X.X.XX
+# Extract malicious PDF from PCAP
+# Wireshark: File → Export Objects → HTTP
+# Save: pfqa.php (application/pdf, 26 kB)
+#Phase 4 — PDF Forensics
+# Check file hash
+#sha256sum xXXx.php
+# Inspect PDF structure in text editor (NEVER open in Adobe Reader)
+# cat pfqa.php | grep -i "javascript\|openaction\|eval\|stream"
+# Submit hash to VirusTotal
+# https://virustotal.com → search SHA256 $VALUE
+# Phase 5 — Exfiltration Tracing
+# Follow TCP stream on exfiltration connection
+# Right-click packet 402 → Follow → TCP Stream
+# Seq 1 → 1,210,906 = ~1.2 MB uploaded to 55.XX.XX.XX
+```
 Key Finding: Two internal victims compromised. Full names, SSNs, credit card numbers and CVVs
 exfiltrated in plaintext ~20 hours post-infection. 
 
-CVEs: CVE-2009-0927 (Adobe Reader JS buffer overflow) · CVE-2008-2992 (util.printf stack overflow)
+CVEs:
+- CVE-2009-0927 (Adobe Reader JS buffer overflow)
+- CVE-2008-2992 (util.printf stack overflow)
 > 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/Phishing_Forensics_Writeup_protected.pdf)**
 <br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso) to request access
+
+
+
+
+
+
+
+
+
+
+
+
 
 ---
 
