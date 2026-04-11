@@ -65,9 +65,50 @@ must always be manually verified before reporting findings.
 
 ---
 
+### 03 · Web Application Security — Certificate Analysis
+**Tools:** nmap NSE · sslyze · openssl · telnet · csvlook  
+**Context:** Based on a CSS Exam Challenge: Two-exercise certificate security assessment lab combining port discovery, TLS certificate mapping, in-depth cipher analysis, CSV certificate database auditing, and manual PKI chain revocation verification.
+Target: Authorised .r.vuln.land lab targets · local certificate chain files
+- ✅ Full port scan found 6 ports vs 2 with default -F scan
+- ✅ 25 cipher suites in TLS 1.2 (vs Mozilla-recommended 7)
+- ✅ All 5 trust stores rejected certificate — SAN mismatch
+- ✅ CSV audit: 3 critical findings (revoked, SHA-1+RSA1024, self-signed) + 12 expired certs
+- ✅ Intermediate CA REVOKED — invalidates every certificate it ever signed
+- ✅ Manual CRL revocation chain verified: Root CA → Intermediate CA → End Entity
+
+**Discover All Open Ports - Identify Ports with TLS Certificates**
+<br><img width="620" height="164" alt="image" src="https://github.com/user-attachments/assets/2a20f310-fda4-49ae-9936-46b899150dc1" />
+<br><img width="549" height="50" alt="image" src="https://github.com/user-attachments/assets/7a897ca7-4848-405f-8c8e-eaa46591882b" />
 
 
+**Finding Certificate with Subject or Specific Protocol**
+<br><img width="220" height="69" alt="image" src="https://github.com/user-attachments/assets/18b5b787-c88f-4f49-8a73-32ef4168a187" />
+<br><img width="499" height="127" alt="image" src="https://github.com/user-attachments/assets/49ed8f29-3bee-4aa4-91a5-326004f6ae85" />
+<br><img width="552" height="70" alt="image" src="https://github.com/user-attachments/assets/fd06e633-5ccb-40c7-a950-d752fc733bfd" />
+<br><img width="333" height="93" alt="image" src="https://github.com/user-attachments/assets/a3390396-7345-4332-aed6-4efd052d8628" />
+<br><img width="398" height="160" alt="image" src="https://github.com/user-attachments/assets/4210d4c0-4838-418f-8e01-1ac643dff9a0" />
+
+
+**In-Depth TLS Analysis — direct browser access - Auditing a Certificate Database for Insecure Certificates**
+<br><img width="514" height="295" alt="image" src="https://github.com/user-attachments/assets/72a5af8b-2ccc-4a16-a60b-dcd33ccbfc96" />
+<br><img width="589" height="73" alt="image" src="https://github.com/user-attachments/assets/99912577-94f3-4304-9e41-13008883da2d" />
+<br><img width="637" height="87" alt="image" src="https://github.com/user-attachments/assets/793e8326-be2a-43af-aa1e-d75d29a9a84c" />
+<br>Revocation/OCSP OCSP Stapling: NOT SUPPORTED 
+<br><img width="611" height="39" alt="image" src="https://github.com/user-attachments/assets/99be1370-d617-4a8b-bb34-1c226aafd0c1" />
+<br><img width="1379" height="898" alt="image" src="https://github.com/user-attachments/assets/0acd73f3-1b33-4673-9126-1e179469a247" />
+
+** CRL Revocation Verification of a Certificate Chain**
+<br><img width="510" height="240" alt="image" src="https://github.com/user-attachments/assets/bfe8fb38-187d-4e49-a82b-414dc35ca81a" />
+<br><img width="584" height="82" alt="image" src="https://github.com/user-attachments/assets/1f4ea08a-8af3-4d99-a53e-d01de59339d5" />
+<br><img width="603" height="157" alt="image" src="https://github.com/user-attachments/assets/22047420-c621-4bab-8de2-eea34e97a41f" />
+<br><img width="518" height="91" alt="image" src="https://github.com/user-attachments/assets/700297b2-06cd-447d-bc8a-6ff36c92e067" />
+
+
+
+📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/CertificateAnalysis_Writeup_protected.pdf)**  
+> 🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso)
 ---
+
 
 ## 🧰 Tools Used
 
