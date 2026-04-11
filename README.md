@@ -90,22 +90,22 @@ professional penetration tests — ARP sweep, service enumeration, credential te
 
 **Commands**
 ```bash
-# Host Discovery
-sudo netdiscover -r 19X.XXX.X.X/XX -i eth0
+Host Discovery
+# sudo netdiscover -r 19X.XXX.X.X/XX -i eth0
 # MAC OUI lookup — identifies device vendor from first 3 bytes
-# Service Enumeration
+Service Enumeration
 # gateway scan
 # sudo nmap -A -sV 19X.XXX.X.X
 # Full port scan on device (default scan showed all filtered)
-sudo nmap -p 0-65535 -Pn --min-rate 500 19X.XXX.X.XXX
-# SSL certificate details
-sudo nmap --script ssl-cert -Pn 19X.XXX.X.XXX
-#Phase 4 — Manual Probing (curl)
-curl -v http://19X.XXX.X.XXX
-#Credential Testing (Hydra)
+# sudo nmap -p 0-65535 -Pn --min-rate 500 19X.XXX.X.XXX
+SSL certificate details
+# sudo nmap --script ssl-cert -Pn 19X.XXX.X.XXX
+Manual Probing (curl)
+# curl -v http://19X.XXX.X.XXX
+Credential Testing (Hydra)
 # Brute force 
-hydra -l admin -P /usr/share/wordlists/rockyou.txt \
-      19X.XXX.X.XXX $PROTOCOL-get /
+# hydra -l admin -P /usr/share/wordlists/rockyou.txt \
+#       19X.XXX.X.XXX $PROTOCOL-get /
 ```
 
 **Asset discovery — 10 hosts identified**
