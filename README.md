@@ -14,7 +14,7 @@ No unauthorised systems were accessed. All work complies with Swiss law and ethi
 | 04 | SIEM & Endpoint Detection (Wazuh) | Wazuh · Elastic Stack · Sysmon | 🔜 Coming soon |
 | 05 | Email Security Gateway | SPF · DKIM · DMARC · Proxmox | 🔜 Coming soon |
 
-## 📁labs
+---
 
 ###  Network Traffic Forensics - Phishing Attack Investigation
 Scenario: SCI Network Analysis Module -> Corporate phishing incident customer PII exfiltrated to external server
@@ -32,21 +32,21 @@ malware delivery chain, and data exfiltration method.
 
 **Wireshark filters and chosen options**
 ```bash
-# Phase 1 — Initial Triage
+Phase 1 — Initial Triage
 # Protocol hierarchy — bird's-eye view of traffic
 # Wireshark: Statistics → Protocol Hierarchy
 # Network participants — find all IPs
 # Wireshark: Statistics → Conversations → IPv4 tab
 # Filter out TCP noise to see UDP/other protocols
 #! top
-#Phase 2 — SMTP Analysis (Phishing Email)
+Phase 2 — SMTP Analysis (Phishing Email)
 # Filter for SMTP traffic
 #smtp
 # Follow TCP stream to read full email exchange
 # Right-click any SMTP packet → Follow → TCP Stream
 # Filter for victim + attacker traffic
 #ip.addr == 173.255.XXX.XX || ip.addr == 10.10X.XXX.XX
-#Phase 3 — HTTP Analysis (Malware Delivery)
+Phase 3 — HTTP Analysis (Malware Delivery)
 # Find who clicked the phishing link
 #http
 # Filter traffic to malware delivery server
@@ -54,17 +54,16 @@ malware delivery chain, and data exfiltration method.
 # Extract malicious PDF from PCAP
 # Wireshark: File → Export Objects → HTTP
 # Save: pfqa.php (application/pdf, 26 kB)
-#Phase 4 — PDF Forensics
+Phase 4 — PDF Forensics
 # Check file hash
 #sha256sum xXXx.php
 # Inspect PDF structure in text editor (NEVER open in Adobe Reader)
-# cat pfqa.php | grep -i "javascript\|openaction\|eval\|stream"
+# cat xXx.php | grep -i "javascript\|openaction\|xxx\|xxx"
 # Submit hash to VirusTotal
 # https://virustotal.com → search SHA256 $VALUE
-# Phase 5 — Exfiltration Tracing
+Phase 5 — Exfiltration Tracing
 # Follow TCP stream on exfiltration connection
 # Right-click packet 402 → Follow → TCP Stream
-# Seq 1 → 1,210,906 = ~1.2 MB uploaded to 55.XX.XX.XX
 ```
 Key Finding: Two internal victims compromised. Full names, SSNs, credit card numbers and CVVs
 exfiltrated in plaintext ~20 hours post-infection. 
@@ -75,38 +74,39 @@ CVEs:
 > 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/Phishing_Forensics_Writeup_protected.pdf)**
 <br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso) to request access
 
-
-
-
-
-
-
-
-
-
-
-
-
 ---
 
 ### 03 · Home Network Security Audit
 Performed a full recon-to-findings audit on a real home network using the same methodology used in
 professional penetration tests — ARP sweep, service enumeration, credential testing, and manual verification.
 - **Tools:** netdiscover · nmap · Hydra · curl
-- Target:  192.168.X.X/24 home gateway.
+- Target:  19X.XXX.X.X/XX home gateway.
 - ✅ 10 live hosts via ARP sweep — MAC OUI vendor mapping
 - ✅ Critical finding: unauthenticated admin panel on Bang & Olufsen Speaker
 - ✅ SSL certificate expired **1999** — 26 years ago
-- ✅ UPnP enabled on Swisscom Internet-Box — silent port-opening attack vector
+- ✅ UPnP enabled on ISP — silent port-opening attack vector
 - ✅ Hydra false-positive analysis — 16 "found" passwords, all manually disproved
 - ✅ IoT security comparison: Roomba (hardened) vs Speaker BP A9 (critical failures)
 
-Key Finding: Bang & Olufsen Speaker at 192.168.1.XXX exposed a fully
-unauthenticated admin panel (GoAhead WebServer) with direct access to network settings and firmware
-update capability. SSL certificate expired in 1999.
-Notable lesson: Hydra reported 16 valid passwords against the router — all false positives caused by
-the router returning identical 301 redirects for every request. Confirmed that automated tool output
-must always be manually verified before reporting findings.
+**Commands**
+```bash
+# Host Discovery
+sudo netdiscover -r 19X.XXX.X.X/XX -i eth0
+# MAC OUI lookup — identifies device vendor from first 3 bytes
+# Service Enumeration
+# gateway scan
+# sudo nmap -A -sV 19X.XXX.X.X
+# Full port scan on device (default scan showed all filtered)
+sudo nmap -p 0-65535 -Pn --min-rate 500 19X.XXX.X.XXX
+# SSL certificate details
+sudo nmap --script ssl-cert -Pn 19X.XXX.X.XXX
+#Phase 4 — Manual Probing (curl)
+curl -v http://19X.XXX.X.XXX
+#Credential Testing (Hydra)
+# Brute force 
+hydra -l admin -P /usr/share/wordlists/rockyou.txt \
+      19X.XXX.X.XXX $PROTOCOL-get /
+```
 
 **Asset discovery — 10 hosts identified**
 <br><img width="335" height="25" alt="image" src="https://github.com/user-attachments/assets/dd25c244-83f6-4742-a8f7-c88e9747109f" />
@@ -120,6 +120,11 @@ must always be manually verified before reporting findings.
 
 **Unauthenticated admin panel — direct browser access**
 <br><img width="404" height="69" alt="image" src="https://github.com/user-attachments/assets/89f716f6-18d8-4b6e-ba40-82a7f99e7a73" />
+
+Key Finding:A device at 19X.XXX.X.XXX exposed a fully unauthenticated admin panel (GoXXX WebServer) with direct access to network settings and firmware
+update capability. SSL certificate expired in 1999.
+<br>Notable lesson: Hydra reported 16 valid passwords against the router — all false positives caused by
+the router returning identical 301 redirects for every request.  
 
 > 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/HomeNetworkAudit_Writeup_protected.pdf)**
 <br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso) to request access
