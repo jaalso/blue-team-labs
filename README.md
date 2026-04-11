@@ -6,12 +6,12 @@
 ## 📁labs
 
 ###  Network Traffic Forensics - Phishing Attack Investigation
-Scenario: Corporate phishing incident — customer PII exfiltrated to external server
+Scenario: SCI Network Analysis Module -> Corporate phishing incident — customer PII exfiltrated to external server
 Investigated a real-world-style incident starting from a known outcome ("customer data on Pastebin")
 and traced it backwards through a PCAP file to identify the initial intrusion vector, compromised users,
 malware delivery chain, and data exfiltration method.
 - **Tools:** Wireshark · TShark · VirusTotal · HTTP Object Export
-- ✅ SMTP analysis :spoofed phishing email identified (loser@hotmail.com)
+- ✅ SMTP analysis :spoofed phishing email identified (xxxx@hotmail.com)
 - ✅ Malicious PDF extracted from PCAP (26 kB) — 41/64 VT detection
 - ✅ PDF forensics — embedded JavaScript, auto-execute /OpenAction, obfuscated shellcode
 - ✅ CVEs confirmed: CVE-2009-0927 · CVE-2008-2992 (Adobe Reader)
