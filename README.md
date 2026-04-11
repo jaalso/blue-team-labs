@@ -150,7 +150,7 @@ Port Discovery And Certificate Mapping
 # nmap --script ssl-cert -p 4443,8080,8081,9990,21021,30443 -Pn $HOST
 Deep TLS Analysis
 # Deep TLS analysis — cipher suites, trust stores, OCSP
-sslyze $HOST:443
+# sslyze $HOST:443
 # Port scan with SSL certificate extraction + service version
 # nmap -sV -p 443,8443,8080,8888,9443 --script ssl-cert $HOST
 CSV Certificate Audit
@@ -209,10 +209,11 @@ CRL Chain Verification
 | Category | Tools |
 |---|---|
 | Traffic Analysis | Wireshark · TShark · NetworkMiner |
-| Certificate Analysis | nmap NSE · sslyze · openssl · telnet |
-| SIEM & Monitoring | Wazuh · Elastic Stack · Sysmon |
+| Certificate Analysis | nmap NSE · sslyze · sslscan · openssl · telnet · csvlook |
+| Network Scanning | nmap · netdiscover · curl · Hydra |
 | Email Forensics | emlAnalyzer · CyberChef · MXToolbox |
-| Platform | Kali Linux · VirtualBox · .r.vuln.land |
+| SIEM & Monitoring | Wazuh · Elastic Stack · Sysmon |
+| Platform | Kali Linux · VirtualBox · .r.vuln.land (authorised) |
 
 ---
 
