@@ -219,7 +219,7 @@ Covers the full deployment lifecycle — server setup, service recovery, agent e
 
 **Some Commands Used**
 ```bash
-Phase 1 Server Deployment & Verification
+Phase 1 Server Deployment And Verification
 # Confirm Wazuh OVA received correct IPs after VirtualBox import
 # ip a
 # eth0: 19X.1XX.XX.XXX (host-only — lab network)
@@ -248,7 +248,7 @@ Phase 4 File Integrity Monitoring (FIM)
 # Verified in dashboard: Threat Hunting → search "test-confidential"
 # Rule fired: "File added to the system"
 Phase 5 Threat Detection (Recon Simulation)
-nmap -sS 12X.X.X.XX                       # triggers T1046 Network Service Discovery alert
+# nmap -sS 12X.X.X.XX                       # triggers T1046 Network Service Discovery alert
 # View in dashboard: Threat Hunting → filter by MITRE T1046
 # Check what Wazuh sees from Kali's normal operation
 # Rule 5402 = sudo to ROOT (T1548 Privilege Escalation)
@@ -258,8 +258,8 @@ nmap -sS 12X.X.X.XX                       # triggers T1046 Network Service Disco
 
 **Lab Results**
 <br><img width="600" height="1079" alt="image" src="https://github.com/user-attachments/assets/16f57394-d948-4238-a943-e2dc45c2bbfb" />
-<br><img width="1692" height="931" alt="image" src="https://github.com/user-attachments/assets/f5790914-01a2-4025-bf23-4d27f3f69c24" />
-<br><img width="1705" height="911" alt="image" src="https://github.com/user-attachments/assets/f2c7e972-5ec0-4811-9790-9ae6960fa1e0" />
+<br><img width="600" height="931" alt="image" src="https://github.com/user-attachments/assets/f5790914-01a2-4025-bf23-4d27f3f69c24" />
+<br><img width="600" height="911" alt="image" src="https://github.com/user-attachments/assets/f2c7e972-5ec0-4811-9790-9ae6960fa1e0" />
 | Metric | Result |
 |---|---|
 | Total events captured | 258 |
@@ -277,14 +277,13 @@ nmap -sS 12X.X.X.XX                       # triggers T1046 Network Service Disco
 
 | Session | Exercise | Goal |
 |---|---|---|
-| A | `nmap -sS 127.0.0.1` → capture T1046 in Threat Hunting | Recon detection validation |
+| A | `nmap -sS 1XX.X.X.XX` → capture T1046 in Threat Hunting | Recon detection validation |
 | B | Hydra brute-force against Wazuh SSH → Rule 5712 spike | Brute force pattern recognition |
 | C | Deploy Windows 10 VM agent → compare CIS score vs Kali 45% | Multi-platform SIEM |
 | D | Apply CIS remediation → verify score improvement | Full hardening loop |
 
-📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/CertificateAnalysis_Writeup_protected.pdf)**  
-<br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso)
-
+> 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/wazuh_lab_report_protected.pdf)**
+<br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso) to request access
 
 ---
 
