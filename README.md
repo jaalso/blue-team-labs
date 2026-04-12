@@ -21,7 +21,7 @@ Scenario: SCI Network Analysis Module -> Corporate phishing incident customer PI
 Investigated a real-world-style incident starting from a known outcome ("customer data on Pastebin")
 and traced it backwards through a PCAP file to identify the initial intrusion vector, compromised users,
 malware delivery chain, and data exfiltration method.
-- **Tools:** Wireshark · TShark · VirusTotal · HTTP Object Export
+**Tools:** Wireshark · TShark · VirusTotal · HTTP Object Export
 - ✅ SMTP analysis :spoofed phishing email identified (xxxx@hotmail.com)
 - ✅ Malicious PDF extracted from PCAP (26 kB) — 41/64 VT detection
 - ✅ PDF forensics — embedded JavaScript, auto-execute /OpenAction, obfuscated shellcode
@@ -77,10 +77,9 @@ CVEs:
 ---
 
 ### 02 · Home Network Security Audit
-Performed a full recon-to-findings audit on a real home network using the same methodology used in
+Scenario: Performed a full recon-to-findings audit on a real home network using the same methodology used in
 professional penetration tests — ARP sweep, service enumeration, credential testing, and manual verification.
-- **Tools:** netdiscover · nmap · Hydra · curl
-- Target:  19X.XXX.X.X/XX home gateway.
+**Tools:**Tools:** netdiscover · nmap · Hydra · curl
 - ✅ 10 live hosts via ARP sweep — MAC OUI vendor mapping
 - ✅ Critical finding: unauthenticated admin panel on Bang & Olufsen Speaker
 - ✅ SSL certificate expired **1999** — 26 years ago
@@ -132,9 +131,8 @@ the router returning identical 301 redirects for every request.
 ---
 
 ### 03 · Web Application Security — Certificate Analysis
-**Tools:** nmap NSE · sslyze · openssl · telnet · csvlook  
-**Context:** Based on a CSS Exam Challenge: Two-exercise certificate security assessment lab combining port discovery, TLS certificate mapping, in-depth cipher analysis, CSV certificate database auditing, and manual PKI chain revocation verification.
-Target: Authorised .r.vuln.land lab targets · local certificate chain files
+Scenario: Based on a CSS Exam Challenge: Two-exercise certificate security assessment lab combining port discovery, TLS certificate mapping, in-depth cipher analysis, CSV certificate database auditing, and manual PKI chain revocation verification.
+**Tools:**  nmap NSE · sslyze · openssl · telnet · csvlook  
 - ✅ Full port scan found 6 ports vs 2 with default -F scan
 - ✅ 25 cipher suites in TLS 1.2 (vs Mozilla-recommended 7)
 - ✅ All 5 trust stores rejected certificate — SAN mismatch
@@ -203,10 +201,9 @@ CRL Chain Verification
 ---
 
 ### 04 · SIEM & Endpoint Detection — Wazuh Home Lab
-**Tools:** VirtualBox · SSH · systemctl · wget · dpkg · nmap
-<br>Architecture: Wazuh OVA server (19X.XXX.XX.XXX) + Kali Linux agent ($HOSTNAME) — VirtualBox host-only network
-<br>From SCI Basic Hardening Module, I created a single-agent SIEM home lab deploying Wazuh as an open-source SIEM/XDR/EDR platform.
+Scenario: From SCI Basic Hardening Module, I created a single-agent SIEM home lab deploying Wazuh as an open-source SIEM/XDR/EDR platform.
 Covers the full deployment lifecycle — server setup, service recovery, agent enrollment, and live monitoring across 5 security domains mapped to class topics.
+**Tools:** VirtualBox · SSH · systemctl · wget · dpkg · nmap
 - ✅ Wazuh OVA deployed on VirtualBox — server + Kali Linux agent on host-only network
 - ✅ Service recovery — diagnosed wazuh-manager startup timeout (Java indexer RAM contention)
 - ✅ Kali Linux enrolled as monitored endpoint — active within 30 seconds of agent start
@@ -286,16 +283,15 @@ Phase 5 Threat Detection (Recon Simulation)
 ---
 
 ### 05 · Email Security Gateway — Proxmox Mail Gateway
-<br>Complete enterprise-grade email security gateway deployed from scratch — three VMs, eight phases, five phishing attack simulations, and full detection/blocking demonstration. Direct defensive counterpart to the GoPhish red team lab.
+Scenario: Complete enterprise-grade email security gateway deployed from scratch — three VMs, eight phases, five phishing attack simulations, and full detection/blocking demonstration. Direct defensive counterpart to the GoPhish red team lab.
 <br>**Tools:** Proxmox Mail Gateway 9.0 · Postfix · Dovecot · Docker · SpamAssassin · ClamAV · swaks · Thunderbird · analyze.py
 <br>**Architecture:**
-| Component | IP | Role | Software |
-|---|---|---|---|
+| Component | Role | Software |
+|---|---|---|
 | Kali Linux VM | Attacker / Tester | swaks · analyze.py · EICAR |
 | PMG VM | Email Gateway / Filter | Proxmox Mail Gateway 9.0 |
 | Postfix + Dovecot | Mail Server | Docker mailserver container |
 | Windows 10 VM | Victim / Client | Thunderbird IMAP |
-
 - ✅ PMG 9.0 installed — ClamAV (6.6M signatures) · SpamAssassin · Quarantine rules configured
 - ✅ Docker mail server — Postfix + Dovecot + OpenDKIM + OpenDMARC in single container
 - ✅ Custom forensic tool analyze.py developed — 7-section .eml analysis (headers · SPF/DKIM/DMARC · MIME · URLs)
@@ -306,7 +302,6 @@ Phase 5 Threat Detection (Recon Simulation)
 - ✅ Thunderbird on Windows 10 — victim perspective demonstrated via IMAP :143
 - ✅ PMG Tracking Center — full audit trail per email (SA score · rule applied · relay path · disposition)
 - ✅ Trust zone finding documented — ALL_TRUSTED(-1) adjustment for internal traffic bypasses content scoring
-
 
 **Some Commands Used**
 ```bash
@@ -345,7 +340,7 @@ Phase 5 PMG Advanced Rules
 | Spearphishing Link | T1566.002 | swaks + fake URL | Phase 4 — Test 5 |
 | Masquerading | T1036 | $SENDEREMAIL@lab.local From: | Phase 4 — Test 5 |
 | Email Hiding Rules | T1564.008 | Missing Message-ID | Phase 4 — Test 2 |
-| Impersonation | T1656 | $SENDEREMAIL@COMPANYDOMAIN.com spoof | Phase 4 — Test 3 |
+| Impersonation | T1656 | $SENDEREMAIL@DOMAIN.COM spoof | Phase 4 — Test 3 |
 | Defense: Email Filtering | M1031 | PMG + SpamAssassin | Phase 6/8 |
 | Defense: DMARC | M1054 | DMARC p=reject (COMPANY) | Phase 4 — Test 3 |
 
@@ -361,7 +356,7 @@ Phase 5 PMG Advanced Rules
 | Credential capture | MFA enforcement | Microsoft Authenticator | 🔴 Very High — neutralizes capture |
 
 **Key Findings** 
-<br>**DMARC** p=reject is the only control that stops spoofing at the gateway — proven in Test 3 where ceo@schroders.com was rejected before SpamAssassin ran. Domains with p=none are invisible to the gateway
+<br>**DMARC** p=reject is the only control that stops spoofing at the gateway — proven in Test 3 where $SENDEREMAIL@DOMAIN.COM was rejected before SpamAssassin ran. Domains with p=none are invisible to the gateway
 <br>**Trust zone misconfiguration** is a real risk — ALL_TRUSTED(-1) SpamAssassin adjustment for internal senders reduces phishing scores from 5/5 to 0/5. Overly broad trusted network ranges bypass content inspection — a production misconfiguration SOC analysts must audit
 <br>**PMG Tracking Center** = Mimecast Message Center — same workflow: sender IP · SA score breakdown · rule applied · relay path · delivery status. Skills transfer directly to enterprise platforms
 <br>**Message-ID** is a forensic fingerprint — its absence reveals non-standard sending tools; its domain reveals true sending infrastructure regardless of the From: header
