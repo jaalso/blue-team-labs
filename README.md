@@ -21,7 +21,7 @@ Scenario: SCI Network Analysis Module -> Corporate phishing incident customer PI
 Investigated a real-world-style incident starting from a known outcome ("customer data on Pastebin")
 and traced it backwards through a PCAP file to identify the initial intrusion vector, compromised users,
 malware delivery chain, and data exfiltration method.
-**Tools:** Wireshark · TShark · VirusTotal · HTTP Object Export
+<br>**Tools:** Wireshark · TShark · VirusTotal · HTTP Object Export
 - ✅ SMTP analysis :spoofed phishing email identified (xxxx@hotmail.com)
 - ✅ Malicious PDF extracted from PCAP (26 kB) — 41/64 VT detection
 - ✅ PDF forensics — embedded JavaScript, auto-execute /OpenAction, obfuscated shellcode
@@ -79,7 +79,7 @@ CVEs:
 ### 02 · Home Network Security Audit
 Scenario: Performed a full recon-to-findings audit on a real home network using the same methodology used in
 professional penetration tests — ARP sweep, service enumeration, credential testing, and manual verification.
-**Tools:**Tools:** netdiscover · nmap · Hydra · curl
+<br>**Tools:** netdiscover · nmap · Hydra · curl
 - ✅ 10 live hosts via ARP sweep — MAC OUI vendor mapping
 - ✅ Critical finding: unauthenticated admin panel on Bang & Olufsen Speaker
 - ✅ SSL certificate expired **1999** — 26 years ago
@@ -132,7 +132,7 @@ the router returning identical 301 redirects for every request.
 
 ### 03 · Web Application Security — Certificate Analysis
 Scenario: Based on a CSS Exam Challenge: Two-exercise certificate security assessment lab combining port discovery, TLS certificate mapping, in-depth cipher analysis, CSV certificate database auditing, and manual PKI chain revocation verification.
-**Tools:**  nmap NSE · sslyze · openssl · telnet · csvlook  
+<br>**Tools:** nmap NSE · sslyze · openssl · telnet · csvlook  
 - ✅ Full port scan found 6 ports vs 2 with default -F scan
 - ✅ 25 cipher suites in TLS 1.2 (vs Mozilla-recommended 7)
 - ✅ All 5 trust stores rejected certificate — SAN mismatch
@@ -203,7 +203,7 @@ CRL Chain Verification
 ### 04 · SIEM & Endpoint Detection — Wazuh Home Lab
 Scenario: From SCI Basic Hardening Module, I created a single-agent SIEM home lab deploying Wazuh as an open-source SIEM/XDR/EDR platform.
 Covers the full deployment lifecycle — server setup, service recovery, agent enrollment, and live monitoring across 5 security domains mapped to class topics.
-**Tools:** VirtualBox · SSH · systemctl · wget · dpkg · nmap
+<br>**Tools:** VirtualBox · SSH · systemctl · wget · dpkg · nmap
 - ✅ Wazuh OVA deployed on VirtualBox — server + Kali Linux agent on host-only network
 - ✅ Service recovery — diagnosed wazuh-manager startup timeout (Java indexer RAM contention)
 - ✅ Kali Linux enrolled as monitored endpoint — active within 30 seconds of agent start
