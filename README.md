@@ -285,6 +285,85 @@ Phase 5 Threat Detection (Recon Simulation)
 
 ---
 
+### 05 · Email Security Gateway — Proxmox Mail Gateway
+**Tools:** Proxmox Mail Gateway 9.0 · Postfix · Dovecot · Docker · SpamAssassin · ClamAV · swaks · Thunderbird · analyze.py
+<br>Architecture: 
+<br>Kali (attacker) → swaks · analyze.py · EICAR (Role: Attacker / Tester)
+<br>PMG VM →  Proxmox Mail Gateway 9.0 (Role: Email Gateway / Filter)
+<br>Postfix + Dovecot →  Docker mailserver container (Role: Mail Server)
+<br>Mail Server → Thunderbird IMAP (Role: Victim / Client)
+<br>Complete enterprise-grade email security gateway deployed from scratch — three VMs, eight phases, five phishing attack simulations, and full detection/blocking demonstration. Direct defensive counterpart to the GoPhish red team lab.
+
+- ✅ PMG 9.0 installed — ClamAV (6.6M signatures) · SpamAssassin · Quarantine rules configured
+- ✅ Docker mail server — Postfix + Dovecot + OpenDKIM + OpenDMARC in single container
+- ✅ Custom forensic tool analyze.py developed — 7-section .eml analysis (headers · SPF/DKIM/DMARC · MIME · URLs)
+- ✅ DMARC p=reject blocked CEO fraud spoof — rejected before SpamAssassin even ran
+- ✅ Sender blocklist rule — it-support@lab.local blocked: pmg-smtp-filter: block mail to <victim@lab.local>
+- ✅ SpamAssassin threshold 5/5 — phishing email (Test 5) scored maximum
+- ✅ ClamAV virus infrastructure confirmed — EICAR test file sent as attachment
+- ✅ Thunderbird on Windows 10 — victim perspective demonstrated via IMAP :143
+- ✅ PMG Tracking Center — full audit trail per email (SA score · rule applied · relay path · disposition)
+- ✅ Trust zone finding documented — ALL_TRUSTED(-1) adjustment for internal traffic bypasses content scoring
+
+
+**Some Commands Used**
+```bash
+Phase 1 Docker Mail Server Deployment
+# Install Docker
+# sudo apt install docker.io docker-compose -y
+# docker --version
+# docker-compose --version
+# Start mailserver container (docker-compose.yml pre-configured)
+# docker-compose up -d
+# victim mailbox
+# docker exec -it mailserver setup email add $VICTIMEAMAIL $PASSWORD
+Phase 2 Email Forensics (analyze.py)
+# Run custom 7-section forensic analysis on any .eml file
+# python3 analyze.py test.eml
+# Works on course samples too
+# python3 analyze.py Testmail_1.eml
+# python3 analyze.py karcher_spam.eml
+Phase 3 Attack Simulation (5 Tests)
+# Test 1 — Basic delivery
+# swaks --to $VICTIMEAMAIL --from $ATTACKEREAMAIL\
+#       --server 19X.XXX.XX.XX --port 25 --helo $ATTACKERHOST
+Phase 4 PMG Configuration
+# Access PMG Web UI
+# PMG settings configured via Web UI:
+# Verify mail flow through PMG
+Phase 5 PMG Advanced Rules
+# Test blocklist rule (configured in PMG Web UI)
+# Generate EICAR test file for ClamAV testing
+# Check PMG Tracking Center for SA scores and rule verdicts
+```
+
+**Key Findings** 
+<br>DMARC p=reject is the only control that stops spoofing at the gateway — proven in Test 3 where ceo@schroders.com was rejected before SpamAssassin ran. Domains with p=none are invisible to the gateway
+<br>Trust zone misconfiguration is a real risk — ALL_TRUSTED(-1) SpamAssassin adjustment for internal senders reduces phishing scores from 5/5 to 0/5. Overly broad trusted network ranges bypass content inspection — a production misconfiguration SOC analysts must audit
+<br>PMG Tracking Center = Mimecast Message Center — same workflow: sender IP · SA score breakdown · rule applied · relay path · delivery status. Skills transfer directly to enterprise platforms
+<br>Message-ID is a forensic fingerprint — its absence reveals non-standard sending tools; its domain reveals true sending infrastructure regardless of the From: header
+
+> 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/email_security_gateway_report_protected.pdf)**
+<br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso) to request access
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
 ## 🧰 Tools Used
 
 | Category | Tools |
