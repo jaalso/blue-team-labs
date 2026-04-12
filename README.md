@@ -287,18 +287,20 @@ Phase 5 Threat Detection (Recon Simulation)
 
 ### 05 · Email Security Gateway — Proxmox Mail Gateway
 **Tools:** Proxmox Mail Gateway 9.0 · Postfix · Dovecot · Docker · SpamAssassin · ClamAV · swaks · Thunderbird · analyze.py
-<br>Architecture: 
-<br>Kali (attacker) → swaks · analyze.py · EICAR (Role: Attacker / Tester)
-<br>PMG VM →  Proxmox Mail Gateway 9.0 (Role: Email Gateway / Filter)
-<br>Postfix + Dovecot →  Docker mailserver container (Role: Mail Server)
-<br>Mail Server → Thunderbird IMAP (Role: Victim / Client)
 <br>Complete enterprise-grade email security gateway deployed from scratch — three VMs, eight phases, five phishing attack simulations, and full detection/blocking demonstration. Direct defensive counterpart to the GoPhish red team lab.
+**Architecture:**
+| Component | IP | Role | Software |
+|---|---|---|---|
+| Kali Linux VM | Attacker / Tester | swaks · analyze.py · EICAR |
+| PMG VM | Email Gateway / Filter | Proxmox Mail Gateway 9.0 |
+| Postfix + Dovecot | Mail Server | Docker mailserver container |
+| Windows 10 VM | Victim / Client | Thunderbird IMAP |
 
 - ✅ PMG 9.0 installed — ClamAV (6.6M signatures) · SpamAssassin · Quarantine rules configured
 - ✅ Docker mail server — Postfix + Dovecot + OpenDKIM + OpenDMARC in single container
 - ✅ Custom forensic tool analyze.py developed — 7-section .eml analysis (headers · SPF/DKIM/DMARC · MIME · URLs)
 - ✅ DMARC p=reject blocked CEO fraud spoof — rejected before SpamAssassin even ran
-- ✅ Sender blocklist rule — it-support@lab.local blocked: pmg-smtp-filter: block mail to <victim@lab.local>
+- ✅ Sender blocklist rule — $SENDEREAMAIL blocked: pmg-smtp-filter: block mail to $VICTIMEAMAIL
 - ✅ SpamAssassin threshold 5/5 — phishing email (Test 5) scored maximum
 - ✅ ClamAV virus infrastructure confirmed — EICAR test file sent as attachment
 - ✅ Thunderbird on Windows 10 — victim perspective demonstrated via IMAP :143
@@ -317,7 +319,7 @@ Phase 1 Docker Mail Server Deployment
 # docker-compose up -d
 # victim mailbox
 # docker exec -it mailserver setup email add $VICTIMEAMAIL $PASSWORD
-Phase 2 Email Forensics (analyze.py)
+Phase 2 Email Forensics 
 # Run custom 7-section forensic analysis on any .eml file
 # python3 analyze.py test.eml
 # Works on course samples too
@@ -336,12 +338,33 @@ Phase 5 PMG Advanced Rules
 # Generate EICAR test file for ClamAV testing
 # Check PMG Tracking Center for SA scores and rule verdicts
 ```
+**MITRE ATT&CK Mapping**
+| Technique | ID | Tool | Phase |
+|---|---|---|---|
+| Phishing | T1566 | swaks | Phase 4 — all 5 tests |
+| Spearphishing Link | T1566.002 | swaks + fake URL | Phase 4 — Test 5 |
+| Masquerading | T1036 | $SENDEREMAIL@lab.local From: | Phase 4 — Test 5 |
+| Email Hiding Rules | T1564.008 | Missing Message-ID | Phase 4 — Test 2 |
+| Impersonation | T1656 | ceo@schroders.com spoof | Phase 4 — Test 3 |
+| Defense: Email Filtering | M1031 | PMG + SpamAssassin | Phase 6/8 |
+| Defense: DMARC | M1054 | DMARC p=reject (COMPANY) | Phase 4 — Test 3 |
+
+**Defensive Countermeasures**
+| Attack Vector | Defense | Tool | Effectiveness |
+|---|---|---|---|
+| From: spoofing | DMARC p=reject | DNS + PMG enforcement | 🔴 Very High — blocks at gateway |
+| Known malicious sender | Blocklist rule | PMG Mail Filter | 🔴 High — immediate block |
+| Spam/phishing content | SpamAssassin scoring | PMG + SA rules | 🟡 High — scores 5/5 |
+| Malware attachment | ClamAV scanning | PMG + ClamAV | 🔴 High — 6.6M signatures |
+| Urgency manipulation | Subject filter rule | PMG What Objects | 🟡 Medium — keyword match |
+| Missing Message-ID | Header analysis | analyze.py / SOC triage | 🔴 High — forensic indicator |
+| Credential capture | MFA enforcement | Microsoft Authenticator | 🔴 Very High — neutralizes capture |
 
 **Key Findings** 
-<br>DMARC p=reject is the only control that stops spoofing at the gateway — proven in Test 3 where ceo@schroders.com was rejected before SpamAssassin ran. Domains with p=none are invisible to the gateway
-<br>Trust zone misconfiguration is a real risk — ALL_TRUSTED(-1) SpamAssassin adjustment for internal senders reduces phishing scores from 5/5 to 0/5. Overly broad trusted network ranges bypass content inspection — a production misconfiguration SOC analysts must audit
-<br>PMG Tracking Center = Mimecast Message Center — same workflow: sender IP · SA score breakdown · rule applied · relay path · delivery status. Skills transfer directly to enterprise platforms
-<br>Message-ID is a forensic fingerprint — its absence reveals non-standard sending tools; its domain reveals true sending infrastructure regardless of the From: header
+<br>**DMARC** p=reject is the only control that stops spoofing at the gateway — proven in Test 3 where ceo@schroders.com was rejected before SpamAssassin ran. Domains with p=none are invisible to the gateway
+<br>**Trust zone misconfiguration** is a real risk — ALL_TRUSTED(-1) SpamAssassin adjustment for internal senders reduces phishing scores from 5/5 to 0/5. Overly broad trusted network ranges bypass content inspection — a production misconfiguration SOC analysts must audit
+<br>**PMG Tracking Center** = Mimecast Message Center — same workflow: sender IP · SA score breakdown · rule applied · relay path · delivery status. Skills transfer directly to enterprise platforms
+<br>**Message-ID** is a forensic fingerprint — its absence reveals non-standard sending tools; its domain reveals true sending infrastructure regardless of the From: header
 
 > 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/email_security_gateway_report_protected.pdf)**
 <br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso) to request access
