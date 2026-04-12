@@ -287,7 +287,7 @@ Phase 5 Threat Detection (Recon Simulation)
 
 ### 05 · Email Security Gateway — Proxmox Mail Gateway
 <br>Complete enterprise-grade email security gateway deployed from scratch — three VMs, eight phases, five phishing attack simulations, and full detection/blocking demonstration. Direct defensive counterpart to the GoPhish red team lab.
-**Tools:** Proxmox Mail Gateway 9.0 · Postfix · Dovecot · Docker · SpamAssassin · ClamAV · swaks · Thunderbird · analyze.py
+<br>**Tools:** Proxmox Mail Gateway 9.0 · Postfix · Dovecot · Docker · SpamAssassin · ClamAV · swaks · Thunderbird · analyze.py
 <br>**Architecture:**
 | Component | IP | Role | Software |
 |---|---|---|---|
