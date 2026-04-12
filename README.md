@@ -286,8 +286,8 @@ Phase 5 Threat Detection (Recon Simulation)
 ---
 
 ### 05 · Email Security Gateway — Proxmox Mail Gateway
-**Tools:** Proxmox Mail Gateway 9.0 · Postfix · Dovecot · Docker · SpamAssassin · ClamAV · swaks · Thunderbird · analyze.py
 <br>Complete enterprise-grade email security gateway deployed from scratch — three VMs, eight phases, five phishing attack simulations, and full detection/blocking demonstration. Direct defensive counterpart to the GoPhish red team lab.
+**Tools:** Proxmox Mail Gateway 9.0 · Postfix · Dovecot · Docker · SpamAssassin · ClamAV · swaks · Thunderbird · analyze.py
 <br>**Architecture:**
 | Component | IP | Role | Software |
 |---|---|---|---|
@@ -345,7 +345,7 @@ Phase 5 PMG Advanced Rules
 | Spearphishing Link | T1566.002 | swaks + fake URL | Phase 4 — Test 5 |
 | Masquerading | T1036 | $SENDEREMAIL@lab.local From: | Phase 4 — Test 5 |
 | Email Hiding Rules | T1564.008 | Missing Message-ID | Phase 4 — Test 2 |
-| Impersonation | T1656 | ceo@schroders.com spoof | Phase 4 — Test 3 |
+| Impersonation | T1656 | $SENDEREMAIL@COMPANYDOMAIN.com spoof | Phase 4 — Test 3 |
 | Defense: Email Filtering | M1031 | PMG + SpamAssassin | Phase 6/8 |
 | Defense: DMARC | M1054 | DMARC p=reject (COMPANY) | Phase 4 — Test 3 |
 
@@ -368,22 +368,6 @@ Phase 5 PMG Advanced Rules
 
 > 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/email_security_gateway_report_protected.pdf)**
 <br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso) to request access
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ---
 
