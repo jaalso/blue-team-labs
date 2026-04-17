@@ -126,6 +126,7 @@ update capability. SSL certificate expired in 1999.
 <br>Notable lesson: Hydra reported 16 valid passwords against the router — all false positives caused by
 the router returning identical 301 redirects for every request.  
 
+<br><img width="687" height="502" alt="image" src="https://github.com/user-attachments/assets/5b38cef9-347f-4223-ad32-3e8b1c8c2e88" />
 > 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/HomeNetworkAudit_Writeup_protected.pdf)**
 <br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso) to request access
 
