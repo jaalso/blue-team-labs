@@ -71,6 +71,7 @@ exfiltrated in plaintext ~20 hours post-infection.
 CVEs:
 - CVE-2009-0927 (Adobe Reader JS buffer overflow)
 - CVE-2008-2992 (util.printf stack overflow)
+<br><img width="681" height="559" alt="image" src="https://github.com/user-attachments/assets/afe83a55-0678-45bc-b77f-e55986ada5ef" />
 > 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/cybersecurity-portfolio/raw/main/Phishing_Forensics_Writeup_protected.pdf)**
 <br>🔒 Password protected — contact me via [LinkedIn](https://linkedin.com/in/jaalso) to request access
 
