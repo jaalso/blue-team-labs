@@ -8,11 +8,12 @@ No unauthorised systems were accessed. All work complies with Swiss law and ethi
 
 | # | Lab | Tools | Status |
 |---|---|---|---|
-| 01 | Network Traffic Forensics — Phishing Attack Investigation | Wireshark · TShark · VirusTotal | ✅ Complete |
-| 02 | Home Network Security Audit | netdiscover · nmap · Hydra · curl | ✅ Complete |
-| 03 | Web Application Security — Certificate Analysis | nmap NSE · sslyze · openssl · telnet | ✅ Complete |
+| 01 | Network Traffic Forensics (Phishing PCAP) | Wireshark · TShark · VirusTotal | ✅ Complete |
+| 02 | Home Network Security Audit | netdiscover · nmap · Hydra | ✅ Complete |
+| 03 | Web App Security — Certificate Analysis | nmap NSE · sslyze · openssl | ✅ Complete |
 | 04 | SIEM & Endpoint Detection (Wazuh) | Wazuh v4.14.3 · OpenSearch (internal) · systemctl · SSH | ✅ Complete |
-| 05 | Email Security Gateway — Proxmox Mail Gateway | Docker · Postfix · PMG · swaks · Thunderbird | 🔧 In Progress |
+| 05 | Email Security Gateway — Proxmox Mail Gateway | Docker · Postfix · PMG · swaks · Thunderbird | ✅ Complete |
+
 
 ---
 
