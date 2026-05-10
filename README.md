@@ -18,7 +18,7 @@ All labs conducted in authorised environments — Swiss Cyber Institute lab targ
 
 ---
 
-### 01 · Network Traffic Forensics - Phishing Attack Investigation
+### 01 Network Traffic Forensics - Phishing Attack Investigation
 Scenario: SCI Network Analysis Module -> Corporate phishing incident customer PII exfiltrated to external server
 Investigated a real-world-style incident starting from a known outcome ("customer data on Pastebin")
 and traced it backwards through a PCAP file to identify the initial intrusion vector, compromised users,
@@ -79,7 +79,7 @@ CVEs:
 
 ---
 
-### 02 · Home Network Security Audit
+### 02 Home Network Security Audit
 Scenario: Performed a full recon-to-findings audit on a real home network using the same methodology used in
 professional penetration tests — ARP sweep, service enumeration, credential testing, and manual verification.
 <br>**Tools:** netdiscover · nmap · Hydra · curl
@@ -134,7 +134,7 @@ the router returning identical 301 redirects for every request.
 
 ---
 
-### 03 · Web Application Security — Certificate Analysis
+### 03 Web Application Security — Certificate Analysis
 Scenario: Based on a CSS Exam Challenge: Two-exercise certificate security assessment lab combining port discovery, TLS certificate mapping, in-depth cipher analysis, CSV certificate database auditing, and manual PKI chain revocation verification.
 <br>**Tools:** nmap NSE · sslyze · openssl · telnet · csvlook  
 - ✅ Full port scan found 6 ports vs 2 with default -F scan
@@ -204,7 +204,7 @@ Scenario: Based on a CSS Exam Challenge: Two-exercise certificate security asses
 
 ---
 
-### 04 · SIEM & Endpoint Detection — Wazuh Home Lab
+### 04 SIEM & Endpoint Detection — Wazuh Home Lab
 Scenario: From SCI Basic Hardening Module, I created a single-agent SIEM home lab deploying Wazuh as an open-source SIEM/XDR/EDR platform.
 Covers the full deployment lifecycle — server setup, service recovery, agent enrollment, and live monitoring across 5 security domains mapped to class topics.
 <br>**Tools:** VirtualBox · SSH · systemctl · wget · dpkg · nmap
@@ -286,7 +286,7 @@ Covers the full deployment lifecycle — server setup, service recovery, agent e
 
 ---
 
-### 05 · Email Security Gateway — Proxmox Mail Gateway
+### 05 Email Security Gateway (Proxmox Mail Gateway)
 Scenario: Complete enterprise-grade email security gateway deployed from scratch — three VMs, eight phases, five phishing attack simulations, and full detection/blocking demonstration. Direct defensive counterpart to the GoPhish red team lab.
 <br>**Tools:** Proxmox Mail Gateway 9.0 · Postfix · Dovecot · Docker · SpamAssassin · ClamAV · swaks · Thunderbird · analyze.py
 <br>**Architecture:**
