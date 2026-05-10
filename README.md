@@ -1,7 +1,8 @@
-🛡️blue-team-labs
-> Defensive security lab write-ups 
+> 🛡️ Defensive security lab write-ups 
+ 
 All labs conducted in authorised environments — Swiss Cyber Institute lab targets, own infrastructure, and training platforms.
-No unauthorised systems were accessed. All work complies with Swiss law and ethical hacking standards.
+<br>No unauthorised systems were accessed. All work complies with Swiss law and ethical hacking standards.
+
 ---
 
 ## 📁 Labs
@@ -91,19 +92,19 @@ professional penetration tests — ARP sweep, service enumeration, credential te
 
 **Commands**
 ```bash
-Host Discovery
+# Host Discovery
 # sudo netdiscover -r 19X.XXX.X.X/XX -i eth0
 # MAC OUI lookup — identifies device vendor from first 3 bytes
-Service Enumeration
+# Service Enumeration
 # gateway scan
 # sudo nmap -A -sV 19X.XXX.X.X
 # Full port scan on device (default scan showed all filtered)
 # sudo nmap -p 0-65535 -Pn --min-rate 500 19X.XXX.X.XXX
-SSL certificate details
+# SSL certificate details
 # sudo nmap --script ssl-cert -Pn 19X.XXX.X.XXX
 Manual Probing (curl)
 # curl -v http://19X.XXX.X.XXX
-Credential Testing (Hydra)
+# Credential Testing (Hydra)
 # Brute force 
 # hydra -l admin -P /usr/share/wordlists/rockyou.txt \
 #       19X.XXX.X.XXX $PROTOCOL-get /
@@ -145,21 +146,21 @@ Scenario: Based on a CSS Exam Challenge: Two-exercise certificate security asses
 
 **Commands**
 ```bash
-Port Discovery And Certificate Mapping
+# Port Discovery And Certificate Mapping
 # nmap -p 0-65535 -T4 $HOST
 # Extract TLS certificates from all open ports
 # nmap --script ssl-cert -p 4443,8080,8081,9990,21021,30443 -Pn $HOST
-Deep TLS Analysis
+# Deep TLS Analysis
 # Deep TLS analysis — cipher suites, trust stores, OCSP
 # sslyze $HOST:443
 # Port scan with SSL certificate extraction + service version
 # nmap -sV -p 443,8443,8080,8888,9443 --script ssl-cert $HOST
-CSV Certificate Audit
+# CSV Certificate Audit
 # Parse CSV for readability
 # csvlook -d ';' $CERTIFICATEREPORTNAME.csv
 # Single command — catches three critical failure categories
 # csvlook -d ';' $CERTIFICATEREPORTNAME.csv | grep -iE "revoked|sha1|1024"
-CRL Chain Verification
+# CRL Chain Verification
 # Find CRL distribution point URLs
 # openssl x509 -in $CERTIFICATE_CA.pem -text -noout | grep -A 3 "CRL Distribution"
 # openssl x509 -in $CERTIFICATE.pem -text -noout | grep -A 3 "CRL Distribution"
@@ -217,14 +218,14 @@ Covers the full deployment lifecycle — server setup, service recovery, agent e
 
 **Some Commands Used**
 ```bash
-Phase 1 Server Deployment And Verification
+# Phase 1 Server Deployment And Verification
 # Confirm Wazuh OVA received correct IPs after VirtualBox import
 # ip a
 # eth0: 19X.1XX.XX.XXX (host-only — lab network)
 # eth1: 10.X.X.XX (NAT — internet access)
 # Access dashboard
 # https://19X.XXX.XX.XXX → admin / admin
-Phase 2 Service Recovery (Startup Timeout Fix)
+# Phase 2 Service Recovery (Startup Timeout Fix)
 # SSH into Wazuh server
 #ssh wazuh-user@19X.XXX.XX.XXX
 # Fix — start manager manually after indexer fully initialises
@@ -232,20 +233,20 @@ Phase 2 Service Recovery (Startup Timeout Fix)
 #sudo systemctl restart wazuh-dashboard
 # Verify all three services running
 # sudo systemctl status wazuh-manager wazuh-indexer wazuh-dashboard
-Phase 3 Kali Agent Enrollment
+# Phase 3 Kali Agent Enrollment
 # Downloaded and installed Wazuh agent with pre-configured environment variables
 # Enabled and started agent
 # sudo systemctl daemon-reload
 # sudo systemctl enable wazuh-agent        # starts automatically on boot
 # sudo systemctl start wazuh-agent
-Phase 4 File Integrity Monitoring (FIM)
+# Phase 4 File Integrity Monitoring (FIM)
 # Created a test file in monitored /etc/ directory — simulates sensitive data
 # Wrote content using echo  | $WORD $LOCATION
 # Restarted agent to force immediate FIM scan (default runs on schedule)
 #sudo systemctl restart wazuh-agent
 # Verified in dashboard: Threat Hunting → search "test-confidential"
 # Rule fired: "File added to the system"
-Phase 5 Threat Detection (Recon Simulation)
+# Phase 5 Threat Detection (Recon Simulation)
 # nmap -sS 12X.X.X.XX                       # triggers T1046 Network Service Discovery alert
 # View in dashboard: Threat Hunting → filter by MITRE T1046
 # Check what Wazuh sees from Kali's normal operation
@@ -308,7 +309,7 @@ Scenario: Complete enterprise-grade email security gateway deployed from scratch
 
 **Some Commands Used**
 ```bash
-Phase 1 Docker Mail Server Deployment
+# Phase 1 Docker Mail Server Deployment
 # Install Docker
 # sudo apt install docker.io docker-compose -y
 # docker --version
@@ -317,21 +318,21 @@ Phase 1 Docker Mail Server Deployment
 # docker-compose up -d
 # victim mailbox
 # docker exec -it mailserver setup email add $VICTIMEAMAIL $PASSWORD
-Phase 2 Email Forensics 
+# Phase 2 Email Forensics 
 # Run custom 7-section forensic analysis on any .eml file
 # python3 analyze.py test.eml
 # Works on course samples too
 # python3 analyze.py Testmail_1.eml
 # python3 analyze.py karcher_spam.eml
-Phase 3 Attack Simulation (5 Tests)
+# Phase 3 Attack Simulation (5 Tests)
 # Test 1 — Basic delivery
 # swaks --to $VICTIMEAMAIL --from $ATTACKEREAMAIL\
 #       --server 19X.XXX.XX.XX --port 25 --helo $ATTACKERHOST
-Phase 4 PMG Configuration
+# Phase 4 PMG Configuration
 # Access PMG Web UI
 # PMG settings configured via Web UI:
 # Verify mail flow through PMG
-Phase 5 PMG Advanced Rules
+# Phase 5 PMG Advanced Rules
 # Test blocklist rule (configured in PMG Web UI)
 # Generate EICAR test file for ClamAV testing
 # Check PMG Tracking Center for SA scores and rule verdicts
