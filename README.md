@@ -33,21 +33,21 @@ malware delivery chain, and data exfiltration method.
 
 **Wireshark filters and chosen options**
 ```bash
-Phase 1 — Initial Triage
+# Phase 1 — Initial Triage
 # Protocol hierarchy — bird's-eye view of traffic
 # Wireshark: Statistics → Protocol Hierarchy
 # Network participants — find all IPs
 # Wireshark: Statistics → Conversations → IPv4 tab
 # Filter out TCP noise to see UDP/other protocols
 #! top
-Phase 2 — SMTP Analysis (Phishing Email)
+# Phase 2 — SMTP Analysis (Phishing Email)
 # Filter for SMTP traffic
 #smtp
 # Follow TCP stream to read full email exchange
 # Right-click any SMTP packet → Follow → TCP Stream
 # Filter for victim + attacker traffic
 #ip.addr == 173.255.XXX.XX || ip.addr == 10.10X.XXX.XX
-Phase 3 — HTTP Analysis (Malware Delivery)
+# Phase 3 — HTTP Analysis (Malware Delivery)
 # Find who clicked the phishing link
 #http
 # Filter traffic to malware delivery server
@@ -55,14 +55,14 @@ Phase 3 — HTTP Analysis (Malware Delivery)
 # Extract malicious PDF from PCAP
 # Wireshark: File → Export Objects → HTTP
 # Save: pfqa.php (application/pdf, 26 kB)
-Phase 4 — PDF Forensics
+# Phase 4 — PDF Forensics
 # Check file hash
 #sha256sum xXXx.php
 # Inspect PDF structure in text editor (NEVER open in Adobe Reader)
 # cat xXx.php | grep -i "javascript\|openaction\|xxx\|xxx"
 # Submit hash to VirusTotal
 # https://virustotal.com → search SHA256 $VALUE
-Phase 5 — Exfiltration Tracing
+# Phase 5 — Exfiltration Tracing
 # Follow TCP stream on exfiltration connection
 # Right-click packet 402 → Follow → TCP Stream
 ```
