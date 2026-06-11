@@ -556,7 +556,7 @@ Same pattern — Defender flagged Notepad / Obsidian / VS Code / explorer.exe wi
 
 ---
 
-> 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/blue-team-labs/raw/main/reports/06-windows-triage-tool-lab-report.pdf)**
+> 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/blue-team-labs/raw/main/reports/06-windows-triage-tool-lab-report_protected.pdf)**
 
 > **Note:** to get the script get in touch with me, remember once you have the script, to run downloaded scripts on Windows, you may need to unblock the file first:
 > ```powershell
