@@ -14,7 +14,7 @@ All labs conducted in authorised environments — Swiss Cyber Institute lab targ
 | 03 | Web App Security — Certificate Analysis | nmap NSE · sslyze · openssl | ✅ Complete |
 | 04 | SIEM & Endpoint Detection (Wazuh) | Wazuh v4.14.3 · OpenSearch (internal) · systemctl · SSH | ✅ Complete |
 | 05 | Email Security Gateway — Proxmox Mail Gateway | Docker · Postfix · PMG · swaks · Thunderbird | ✅ Complete |
-
+| 06 | Automated Windows Triage Tool — Invoke-CompromiseCheck.ps1 | PowerShell · CIM/WMI · Event Log · auditpol | ✅ Complete |
 
 ---
 
@@ -370,6 +370,204 @@ Scenario: Complete enterprise-grade email security gateway deployed from scratch
 
 ---
 
+### 06 · Automated Windows Triage Tool — Invoke-CompromiseCheck.ps1
+
+**Tools:** PowerShell 5.1+ · CIM/WMI · Windows Event Log · MpComputerStatus · net localgroup · auditpol  
+**Context:** Swiss Cyber Institute — IR Playbooks & Windows Forensics (June 2026)  
+**Environment:** Windows 11 Pro (personal host) — HP EliteBook 840 G8
+
+After a suspected compromise concern, conducted a full IR triage across 20 forensic checks —
+sessions, network state, accounts, persistence locations, Defender posture and log integrity.
+Codified the entire methodology into a portable PowerShell tool that any defender can run
+on any Windows machine to reproduce the same analysis in under a minute.
+
+- ✅ 20 forensic checks automated end-to-end — runs in 13 seconds
+- ✅ Tiered severity output — `[OK]` / `[INFO]` / `[WARN]` / `[FAIL]` with colour coding
+- ✅ Auto-detection of expected vs unexpected scheduled tasks (allow-list approach)
+- ✅ RDP-specific logon detection (LogonType 10) — flagged in both active sessions and historical events
+- ✅ Failed-logon analysis with audit-policy verification — catches "empty result = audit disabled" failure mode
+- ✅ Defender signature freshness + full-scan age tracking
+- ✅ Suspicious PowerShell pattern matching — `-EncodedCommand` · `IEX` · `Net.WebClient`
+- ✅ Hosts file tampering check + DNS cache review
+- ✅ Cross-references installed software against known remote-access tools (TeamViewer, AnyDesk, VNC, RustDesk, ScreenConnect)
+- ✅ Timestamped report file for evidence preservation
+- ✅ Quick mode (`-Quick`) runs the 8 highest-signal sections in under 60 seconds
+
+---
+
+**Forensic Methodology — 20 Sections**
+
+| # | Section | Purpose |
+|---|---|---|
+| 1 | Active Logon Sessions | Who is logged on right now (LogonType decoder) |
+| 2 | Remote SMB Connections | Files / shares accessed from another device |
+| 3 | Listening Ports | What can be connected to — flags RDP/VNC/TeamViewer/AnyDesk |
+| 4 | Established Connections | Outbound traffic with owning process resolved |
+| 5 | Successful Logons (Event 4624) | Recent identity assertions — RDP highlighted |
+| 6 | Failed Logons (Event 4625) | Brute-force indicators + audit-policy verification |
+| 7 | Account Creation (Event 4720) | New users created on the host |
+| 8 | Local User Accounts | Full account inventory — built-ins should be disabled |
+| 9 | Privileged Group Membership | Administrators + Remote Desktop Users |
+| 10 | Recent Executables in Profile | New EXE/DLL/PS1 in user folders (30-day window) |
+| 11 | Startup Items | Run keys + Win32_StartupCommand persistence |
+| 12 | Scheduled Tasks | Root-path tasks not matching expected updaters |
+| 13 | Services from Unusual Paths | Services not in `Windows\` or `Program Files\` |
+| 14 | Remote Access Software Inventory | TeamViewer / AnyDesk / VNC / RustDesk / etc. |
+| 15 | Microsoft Defender Status | Protections, signature age, scan recency, threat history |
+| 16 | PowerShell Command History | Living-off-the-land pattern matching |
+| 17 | System32 Recent Modifications | 7-day diff |
+| 18 | Hosts File Integrity | DNS-level redirection check |
+| 19 | DNS Client Cache | Recent resolutions for unexpected domains |
+| 20 | Browser Extensions | Extension inventory for Brave / Chrome / Edge |
+
+---
+
+**Usage**
+
+```powershell
+# Standard run — Administrator PowerShell required (64-bit)
+.\Invoke-CompromiseCheck.ps1
+
+# Quick mode — 8 high-signal checks only (~10 seconds)
+.\Invoke-CompromiseCheck.ps1 -Quick
+
+# Custom output location
+.\Invoke-CompromiseCheck.ps1 -OutputPath "D:\Reports"
+```
+
+**Output Status Codes**
+
+| Status | Meaning | Action |
+|---|---|---|
+| `[OK]` | Check passed | None |
+| `[INFO]` | Informational (lists, inventories) | Glance at output |
+| `[WARN]` | Worth reviewing | Investigate |
+| `[FAIL]` | Red flag | Investigate immediately |
+
+A timestamped text report is saved to `Documents\CompromiseCheck_YYYY-MM-DD_HHMMSS.txt`.
+A SUMMARY section at the end lists every WARN/FAIL finding.
+
+---
+
+**Sample Run — Clean Host**
+
+```
+================================================================================
+  WINDOWS COMPROMISE CHECK REPORT
+================================================================================
+  Hostname:     WINDOW
+  Username:     [redacted]
+  Run started:  2026-06-11 10:22:57
+  Run mode:     Full scan (all 20 sections)
+================================================================================
+
+[OK] 2 user session(s), all interactive/cached
+[OK] No active SMB sessions
+[OK] No suspicious listening ports (RDP/VNC/TeamViewer/AnyDesk)
+[OK] No RDP logon events in recent history
+[OK] No failed logon attempts recorded
+[OK] Logon auditing is active (Success and Failure)
+[OK] No recent account creation events
+[OK] Only expected Windows accounts and current user
+[OK] All root-path scheduled tasks match expected updaters
+[OK] No services from unusual paths
+[OK] No remote access software detected
+[OK] All core Defender protections enabled
+[OK] Antivirus signatures updated 0 day(s) ago
+[OK] Full scan run 29 days ago
+[OK] No suspicious patterns in PowerShell history
+[OK] Hosts file is clean (only comments)
+
+================================================================================
+  SUMMARY
+================================================================================
+  Sections run:    20
+  Duration:        0m 13s
+  Findings:        0 issue(s) flagged
+================================================================================
+```
+
+---
+
+**Engineering Decisions**
+
+**64-bit PowerShell required**  
+Explicit check at start. Some CIM queries fail silently in 32-bit PowerShell (x86).
+Script aborts with clear guidance if launched in x86.
+
+**CIM over WMI**  
+`Get-CimInstance` replaces deprecated `Get-WmiObject` for forward compatibility with PowerShell 7+.
+
+**Locale independent**  
+`net localgroup` output is parsed by structure rather than English-only string matching —
+works on Swiss German / French / other language installs.
+
+**No external dependencies**  
+Only built-in PowerShell + Windows commands. No modules to install, no internet required.
+
+**Failure modes documented**  
+"No events found" for the Security log is distinguished from a real query failure.
+The script verifies audit policy is enabled before trusting the absence of failed logons:
+
+```powershell
+auditpol /get /subcategory:"Logon"
+```
+
+Expected output on a healthy host:
+```
+Logon                                   Success and Failure
+```
+
+If audit policy returns `No Auditing` or only `Success`, the script flags `[WARN]` —
+empty results in that configuration are unreliable.
+
+---
+
+**Compatibility Matrix**
+
+| OS | Status |
+|---|---|
+| Windows 10 (Home / Pro / Enterprise) | ✅ Tested |
+| Windows 11 (Home / Pro / Enterprise) | ✅ Tested |
+| Windows Server 2016+ | ✅ Compatible |
+| PowerShell 5.1 | ✅ Native |
+| PowerShell 7+ | ✅ Native |
+| PowerShell ISE (x86) | ❌ Aborts with guidance |
+
+---
+
+**Real Findings During Development**
+
+The investigation that generated the script produced two genuine findings:
+
+**1. May 3, 2026 — Cerdigent Defender False Positive**  
+Defender quarantined two DigiCert root CAs (`Assured ID Root CA`, `Trusted Root G4`) after signature update 1.449.424 incorrectly flagged them as `Trojan:Win32/Cerdigent.A!dha`. Microsoft acknowledged in DZ1299600 and corrected in 1.449.430. The script's threat-history check (Section 15) surfaces this.
+
+**2. May 25, 2026 — ThreatID 2147891542**  
+Same pattern — Defender flagged Notepad / Obsidian / VS Code / explorer.exe within a 3-minute window. Auto-resolved by Microsoft within hours. Demonstrates supply-chain class false-positive risk. Both are visible in `Get-MpThreatDetection` output.
+
+---
+
+**Known Limitations**
+
+- The expected scheduled tasks allow-list is tuned for consumer software (Brave, OneDrive, Edge, HP, Zoom) — server/fleet environments need allow-list tuning
+- Domain-joined machines may forward Security log to a SIEM — locally-empty results do not represent full account posture
+- Browser extension section shows Chrome Web Store IDs only — names must be reviewed manually in `browser://extensions`
+
+---
+
+> 📄 **[Download Full Lab Report (PDF)](https://github.com/jaalso/blue-team-labs/raw/main/reports/06-windows-triage-tool-lab-report.pdf)**
+
+> **Note:** to get the script get in touch with me, remember once you have the script, to run downloaded scripts on Windows, you may need to unblock the file first:
+> ```powershell
+> Unblock-File .\Invoke-CompromiseCheck.ps1
+> ```
+> Files downloaded from the internet carry an NTFS Alternate Data Stream that PowerShell
+> respects even under `RemoteSigned` execution policy.
+
+
+---
+
 ## 🧰 Tools Used
 
 | Category | Tools |
@@ -377,10 +575,17 @@ Scenario: Complete enterprise-grade email security gateway deployed from scratch
 | Traffic Analysis | Wireshark · TShark · NetworkMiner |
 | Certificate Analysis | nmap NSE · sslyze · sslscan · openssl · telnet · csvlook |
 | Network Scanning | nmap · netdiscover · curl · Hydra |
-| Email Forensics | emlAnalyzer · CyberChef · MXToolbox |
+| Email Forensics | emlAnalyzer · CyberChef · MXToolbox · analyze.py |
+| Email Gateway | Proxmox Mail Gateway · Postfix · Dovecot · SpamAssassin · ClamAV · Thunderbird |
 | SIEM & Monitoring | Wazuh v4.14.3 · OpenSearch (internal) |
+| Windows Forensics | PECmd · AmcacheParser · AppCompatCacheParser · EvtxECmd · MFTECmd · RECmd |
+| Forensic GUI | Timeline Explorer · Registry Explorer |
+| IR & Triage | KAPE · auditpol · Get-MpThreatDetection · Get-NetTCPConnection |
+| Scripting | PowerShell 5.1+ · CIM/WMI · Bash |
+| Privacy Research | Microsoft Privacy Dashboard · Diagnostic Data Viewer · Pi-hole |
+| Containerization | Docker · docker-compose |
 | Deployment | wget · dpkg · systemctl · SSH |
-| Platform | Kali Linux · VirtualBox · .r.vuln.land (authorised) |
+| Platform | Kali Linux · Windows 10/11 · VirtualBox · .r.vuln.land (authorised) |
 
 ---
 
