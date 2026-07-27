@@ -205,9 +205,11 @@ Scenario: Based on a CSS Exam Challenge: Two-exercise certificate security asses
 ---
 
 ### 04 SIEM & Endpoint Detection — Wazuh Home Lab
+
 Scenario: From SCI Basic Hardening Module, I created a single-agent SIEM home lab deploying Wazuh as an open-source SIEM/XDR/EDR platform.
 Covers the full deployment lifecycle — server setup, service recovery, agent enrollment, and live monitoring across 5 security domains mapped to class topics.
 <br>**Tools:** VirtualBox · SSH · systemctl · wget · dpkg · nmap
+
 - ✅ Wazuh OVA deployed on VirtualBox — server + Kali Linux agent on host-only network
 - ✅ Service recovery — diagnosed wazuh-manager startup timeout (Java indexer RAM contention)
 - ✅ Kali Linux enrolled as monitored endpoint — active within 30 seconds of agent start
@@ -215,6 +217,7 @@ Covers the full deployment lifecycle — server setup, service recovery, agent e
 - ✅ FIM alert triggered — /etc/test-confidential.txt creation detected · 7,958 files monitored
 - ✅ 258 events captured — PAM sessions · sudo to ROOT · host-based anomaly detection
 - ✅ MITRE ATT&CK correlation — Rule 5402 (T1548 Privilege Escalation) · Rule 5501/5502 (T1078 Valid Accounts)
+- ✅ CVE scan — 5 High CVEs detected across Python packaging tools pre-installed on Kali: CVE-2025-47273 (setuptools path traversal → RCE, CVSS 8.8) · CVE-2024-6345 (setuptools package URL injection → RCE, CVSS 8.8) · CVE-2025-68616 (weasyprint SSRF bypass, CVSS 7.5) · CVE-2022-40898 (wheel DoS, CVSS 7.5) · CVE-2022-40897 (setuptools ReDoS, CVSS 5.9)
 
 **Some Commands Used**
 ```bash
@@ -259,12 +262,14 @@ Covers the full deployment lifecycle — server setup, service recovery, agent e
 <br><img width="600" height="1079" alt="image" src="https://github.com/user-attachments/assets/16f57394-d948-4238-a943-e2dc45c2bbfb" />
 <br><img width="600" height="931" alt="image" src="https://github.com/user-attachments/assets/f5790914-01a2-4025-bf23-4d27f3f69c24" />
 <br><img width="600" height="911" alt="image" src="https://github.com/user-attachments/assets/f2c7e972-5ec0-4811-9790-9ae6960fa1e0" />
+
 | Metric | Result |
 |---|---|
 | Total events captured | 258 |
 | CIS Benchmark score | 45% (83/190 controls passed) |
 | Files monitored (FIM) | 7,958 |
-| High CVEs identified | 1 |
+| CVEs detected | 5 High (setuptools × 3 · weasyprint × 1 · wheel × 1) |
+| Highest CVSS | 8.8 — CVE-2025-47273 · CVE-2024-6345 (both RCE via network) |
 | MITRE ATT&CK techniques tagged | T1046 · T1548 · T1078 · T1074 |
 
 **Key Findings**
@@ -272,7 +277,19 @@ Covers the full deployment lifecycle — server setup, service recovery, agent e
 - 45% CIS score is the baseline — expected for a default Kali installation (pentesting distro, not hardened workstation). Each of 99 failing controls has a specific remediation command cross-mapped to ISO 27001, NIST SP 800-53, and PCI-DSS simultaneously.
 - Kali's own tools look suspicious — running standard Kali tools while the agent was active triggered Defense Evasion (4 alerts), Privilege Escalation (4 alerts), and Initial Access (2 alerts). This is exactly how enterprise SOCs detect red team activity.
 
-**Next Steps (Planned)**
+**Update: 07.2026**
+<br>CVEs detected: ⚠️ 4 High · 1 Medium — across weasyprint and setuptools/wheel 
+<br>(Python packaging tools pre-installed on Kali). Most critical: CVE-2025-47273 
+<br>(setuptools, CVSS 8.8 — path traversal → RCE) and CVE-2024-6345 (setuptools, 
+<br>CVSS 8.8 — remote code execution via package URL injection).
+
+Vulnerability Detection dashboard
+<img width="1704" height="1001" alt="image" src="https://github.com/user-attachments/assets/d7c7cc95-152f-43e0-862a-ec2762779692" />
+5 vulnerabilities list with all 5 CVE IDs visible
+<img width="1659" height="726" alt="image" src="https://github.com/user-attachments/assets/bd1a6cd4-72c0-49d8-9039-e55af4281da5" />
+<img width="1497" height="1088" alt="image" src="https://github.com/user-attachments/assets/c5ef4229-235c-4fcc-a2b5-0ac37af153d0" />
+E.g.: CVE-2025-47273 (CVSS 8.8 RCE) 
+Path traversal → remote code execution — attacker can write files to arbitrary filesystem locations, potentially escalating to RCE. Fixed in v78.1.1
 
 | Session | Exercise | Goal |
 |---|---|---|
